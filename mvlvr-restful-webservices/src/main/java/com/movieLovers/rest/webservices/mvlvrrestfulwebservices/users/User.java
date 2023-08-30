@@ -1,12 +1,16 @@
 package com.movieLovers.rest.webservices.mvlvrrestfulwebservices.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @Entity(name = "user_details")
 public class User {
     @Id
@@ -17,6 +21,9 @@ public class User {
     @Past(message = "Birthday should be in the past")
     private LocalDate birthdate;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Post> posts;
     protected User(){
 
     }
@@ -48,6 +55,14 @@ public class User {
 
     public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
     @Override

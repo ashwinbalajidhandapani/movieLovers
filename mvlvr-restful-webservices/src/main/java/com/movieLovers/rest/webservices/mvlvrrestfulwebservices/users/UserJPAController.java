@@ -1,6 +1,7 @@
 package com.movieLovers.rest.webservices.mvlvrrestfulwebservices.users;
 
 import com.movieLovers.rest.webservices.mvlvrrestfulwebservices.exceptions.UserNotFoundException;
+import com.movieLovers.rest.webservices.mvlvrrestfulwebservices.jpa.PostRepository;
 import com.movieLovers.rest.webservices.mvlvrrestfulwebservices.jpa.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,12 @@ import java.util.Optional;
 public class UserJPAController {
     private UserDaoServices service;
     private UserRepository repository;
+    private PostRepository postRepository;
 
-    public UserJPAController(UserDaoServices service, UserRepository repository){
+    public UserJPAController(UserDaoServices service, UserRepository repository, PostRepository postRepository){
         this.service = service;
         this.repository = repository;
+        this.postRepository = postRepository;
     }
     // GET Method to list all users Static
     @GetMapping(path = "jpa/users")
@@ -51,5 +54,31 @@ public class UserJPAController {
     @DeleteMapping(path = "jpa/users/{id}")
     public void deleteUserStatic(@PathVariable int id){
         repository.deleteById(id);
+    }
+
+    @GetMapping(path = "jpa/users/posts")
+    public List<Post> showAllPosts(){
+        return postRepository.findAll();
+    }
+
+    @GetMapping(path = "jpa/users/{id}/posts")
+    public List<Post> getPostForUser(@PathVariable int id){
+        Optional<User> user = repository.findById(id);
+        if(user.isEmpty()){
+            throw new UserNotFoundException("id "+id);
+        }
+        return user.get().getPosts();
+    }
+
+    @PostMapping(path="jpa/users/{id}/post")
+    public ResponseEntity<Object> createPostForUser(@PathVariable int id, @Valid @RequestBody Post post){
+        Optional<User> user = repository.findById(id);
+        if(user.isEmpty()){
+            throw new UserNotFoundException("id "+id);
+        }
+        post.setUser(user.get());
+        Post newPost = postRepository.save(post);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newPost.getId()).toUri();
+        return ResponseEntity.created(location).build();
     }
 }
