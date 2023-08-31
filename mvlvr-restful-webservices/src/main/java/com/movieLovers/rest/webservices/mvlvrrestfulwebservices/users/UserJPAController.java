@@ -4,6 +4,7 @@ import com.movieLovers.rest.webservices.mvlvrrestfulwebservices.exceptions.UserN
 import com.movieLovers.rest.webservices.mvlvrrestfulwebservices.jpa.PostRepository;
 import com.movieLovers.rest.webservices.mvlvrrestfulwebservices.jpa.UserRepository;
 import jakarta.validation.Valid;
+import org.hibernate.dialect.MySQLDialect;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -81,4 +82,5 @@ public class UserJPAController {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newPost.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
+
 }
