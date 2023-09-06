@@ -1,10 +1,7 @@
 package com.movieLovers.rest.webservices.mvlvrrestfulwebservices.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
@@ -18,12 +15,16 @@ public class User {
     private int id;
     @Size(min = 2, message = "Name field must have atleast 2 characters")
     private String name;
+    private String emailId;
+    private String password;
     @Past(message = "Birthday should be in the past")
     private LocalDate birthdate;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Post> posts;
+
+    private Roles role;
     protected User(){
 
     }
@@ -61,8 +62,33 @@ public class User {
         return posts;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public String getEmailId() {
+        return emailId;
+    }
+
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
+    }
+
+
+    public Roles getRole() {
+        return role;
+    }
+
+    public void setRole(Roles role) {
+        this.role = role;
     }
 
     @Override
@@ -70,7 +96,11 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", emailId='" + emailId + '\'' +
+                ", password='" + password + '\'' +
                 ", birthdate=" + birthdate +
+                ", posts=" + posts +
+                ", role=" + role +
                 '}';
     }
 }

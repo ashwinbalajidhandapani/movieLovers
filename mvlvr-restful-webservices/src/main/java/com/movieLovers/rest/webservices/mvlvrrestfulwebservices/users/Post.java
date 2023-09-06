@@ -2,7 +2,10 @@ package com.movieLovers.rest.webservices.mvlvrrestfulwebservices.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
+
+import java.time.LocalDate;
 
 @Entity
 public class Post {
@@ -14,7 +17,8 @@ public class Post {
     private Integer id;
     @Size(min = 10, max = 375)
     private String description;
-
+    @Past(message = "message cannot be in the future")
+    private LocalDate datePosted;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private User user;
@@ -41,6 +45,18 @@ public class Post {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public LocalDate getDatePosted() {
+        return datePosted;
+    }
+
+    public void setDatePosted(LocalDate datePosted) {
+        this.datePosted = datePosted;
+    }
+
+    public int getUserId(){
+        return user.getId();
     }
 
     @Override
