@@ -15,7 +15,7 @@ public class SpringSecurityConfiguration {
         httpreq.authorizeHttpRequests(auth -> auth.anyRequest().authenticated());
         // Enable basic authentication
         httpreq.httpBasic(withDefaults());
-        // Disable CSRF
+//         Disable CSRF
         httpreq.csrf().disable();
         return httpreq.build();
     }
